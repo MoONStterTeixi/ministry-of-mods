@@ -14,7 +14,7 @@ local PlayerHouses = {
     [4] = Locale.house_u,
 }
 
-local DATA_FILE = _PATH .. "/modules/player/data/playerdata.json"
+local DATA_FILE = "/data/playerdata.json"
 
 local playerData = {}
 
@@ -23,14 +23,14 @@ local playerData = {}
 ]]
 
 function loadPlayerData(Player)
-    if fileExists(DATA_FILE) then
-        local existingData = json.decode(readFile(DATA_FILE))
-        local playerID = tostring(Player.id)
-        if existingData[playerID] then
-            playerData[playerID] = existingData[playerID]
+    local data = LoadData(_RESOURCE, DATA_FILE)
+    if data then
+        local playerID = tostring(Player.connection)
+        if data[playerID] then
+            playerData[playerID] = data[playerID]
             playerData[playerID].lastPlayed = os.time()
         else
-            playerData[tostring(Player.id)] = {
+            playerData[playerID] = {
                 house = Player.house,
                 gender = Player.gender,
                 lastPlayed = os.time()
@@ -41,15 +41,14 @@ function loadPlayerData(Player)
 end
 
 function savePlayerData(Player)
-    local playerID = tostring(Player.id)
+    local playerID = tostring(Player.connection)
     if playerData[playerID] then
-        local existingData = {}
-        if fileExists(DATA_FILE) then
-            existingData = json.decode(readFile(DATA_FILE))
+        local data = LoadData(_RESOURCE, DATA_FILE)
+        if data then
+            data[playerID] = playerData[playerID]
+            SaveData(_RESOURCE, DATA_FILE, data)
+            return success
         end
-        existingData[playerID] = playerData[playerID]
-        local success = writeFile(DATA_FILE, json.encode(existingData))
-        return success
     end
     return false
 end

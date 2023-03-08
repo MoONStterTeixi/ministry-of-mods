@@ -1,24 +1,19 @@
 _G._PATH = io.popen("cd"):read("*l")
 
 --
--- Globalize JSON
+-- Load Required Libraries
 --
 
-require("dependencies/json")
-
---
--- LUA Extensions
---
-
-require("dependencies/string")
-require("dependencies/table")
-require("dependencies/math")
+require("library/json")
+require("library/string")
+require("library/table")
+require("library/math")
 
 --
 -- File Validation
 --
 
-function fileExists(path)
+local function fileExists(path)
     local file = io.open(path, "r")
 
     if file then
@@ -28,7 +23,7 @@ function fileExists(path)
     return file ~= nil
 end
 
-function readFile(path)
+local function readFile(path)
     local file = io.open(path, "r")
 
     if file == nil then
@@ -42,7 +37,7 @@ function readFile(path)
     return code
 end
 
-function writeFile(path, str)
+local function writeFile(path, str)
     local file = io.open(path, "w+")
 
     if file == nil then
@@ -59,7 +54,7 @@ end
 -- Global Config
 --
 
-local globalConfigFilePath = "data/config.json"
+local globalConfigFilePath = "config.json"
 
 if not fileExists(globalConfigFilePath) then
     return error("No global config file found.")
@@ -519,16 +514,16 @@ end)
 -- Resource Initialization
 --
 
-local initResourceFilePath = "data/resources.json"
+local initResourceFilePath = "modules.json"
 
 if not fileExists(initResourceFilePath) then
-    return error("resources.json is not present in root directory")
+    return error("modules.json is not present in root directory")
 end
 
 local initResources = json.decode(readFile(initResourceFilePath) or "")
 
 if type(initResources) ~= "table" then
-    return error("failed to parse resources.json file")
+    return error("failed to parse modules.json file")
 end
 
 for _,resourceDef in ipairs(initResources) do
