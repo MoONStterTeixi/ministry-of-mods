@@ -14,82 +14,106 @@ local PlayerHouses = {
     [4] = Locale.house_u,
 }
 
--- ConnectToEvents
-RegisterForEvent("player_joined", function(Player)
-    Track(Player, true)
-end)
+local DATA_FILE = _PATH .. "/modules/player/data/playerdata.json"
 
-RegisterForEvent("player_left", function(Player)
-    Track(Player, false)
-end)
+local playerData = {}
 
--- Functions
-function Track(Player, Joined)
-    if Joined then
-        table.insert(PlayersTable, {
-            id = Player.id,
-            gender = Player.gender,
-            house = Player.house,
-            gear = Player.gear,
-            movement = Player.movement
-        })
-        if Config.DiscordLogs then
-            Exports.discord.LogToDiscord("player", Locale.player_join_title, {r = 165, g = 165, b = 165}, string.format(Locale.player_join_message, Player.id), false)
-        end
-    else
-        for i,v in pairs(PlayersTable) do
-            if v.id == Player.id then
-                table.remove(PlayersTable, i)
-                if Config.DiscordLogs then
-                    Exports.discord.LogToDiscord("player", Locale.player_left_title, {r = 165, g = 165, b = 165}, string.format(Locale.player_left_message, Player.id), false)
-                end
-            end
-        end
-    end
-    if Config.DiscordLogs then
-        otherLogs()
-    end
-end
+--[[
+    Functions
+]]
 
-function countPlayers()
-    return #PlayersTable
-end
-
-function countGenders()
-    local tempData = {}
-    for i,v in pairs(PlayersTable) do
-        local genderName = PlayerGenders[v.gender]
-        if not tempData[genderName] then
-            tempData[genderName] = 1
+function loadPlayerData(Player)
+    if fileExists(DATA_FILE) then
+        local existingData = json.decode(readFile(DATA_FILE))
+        local playerID = tostring(Player.id)
+        if existingData[playerID] then
+            playerData[playerID] = existingData[playerID]
+            playerData[playerID].lastPlayed = os.time()
         else
-            tempData[genderName] = tempData[genderName] + 1
+            playerData[tostring(Player.id)] = {
+                house = Player.house,
+                gender = Player.gender,
+                lastPlayed = os.time()
+            }
+            savePlayerData(Player)
         end
     end
-    return tempData
+end
+
+function savePlayerData(Player)
+    local playerID = tostring(Player.id)
+    if playerData[playerID] then
+        local existingData = {}
+        if fileExists(DATA_FILE) then
+            existingData = json.decode(readFile(DATA_FILE))
+        end
+        existingData[playerID] = playerData[playerID]
+        local success = writeFile(DATA_FILE, json.encode(existingData))
+        return success
+    end
+    return false
+end
+
+function onPlayerJoin(Player)
+    loadPlayerData(Player)
+end
+
+function onPlayerLeave(Player)
+    local playerID = tostring(Player.id)
+    savePlayerData(Player)
+    playerData[playerID] = nil
+end
+
+function getPlayerData(Player)
+    local playerID = tostring(Player.id)
+    return playerData[playerID]
+end
+
+function onlinePlayers()
+    local count = 0
+    for _ in pairs(playerData) do
+        count = count + 1
+    end
+    return count
 end
 
 function countHouses()
-    local tempData = {}
-    for i,v in pairs(PlayersTable) do
-        local houseName = PlayerHouses[v.house]
-        if not tempData[houseName] then
-            tempData[houseName] = 1
-        else
-            tempData[houseName] = tempData[houseName] + 1
+    local houses = {}
+    for _, data in pairs(playerData) do
+        local house = data.house
+        if house then
+            houses[PlayerHouses[house]] = (houses[PlayerHouses[house]] or 0) + 1
         end
     end
-    return tempData
+    return houses
 end
 
-function otherLogs()
-    local message = Locale.current_players_title .. string.format(Locale.current_players_message, countPlayers()) .. "\n"
-        .. Locale.gender_count_title .. "\n```" .. json.encode(countGenders(), {indent = true}) .. "```\n"
-        .. Locale.house_count_title .. "\n```" .. json.encode(countHouses(), {indent = true}) .. "```"
-
-    Exports.discord.LogToDiscord("player", Locale.other_logs_title, {r = 165, g = 165, b = 165}, message, false)
+function countGenders()
+    local genders = {}
+    for _, data in pairs(playerData) do
+        local gender = data.gender
+        genders[PlayerGenders[gender]] = (genders[PlayerGenders[gender]] or 0) + 1
+    end
+    return genders
 end
 
--- Exports
-Exports("GetPlayerCount", countPlayers)
-Exports("GetPlayerGenders", countGenders)
-Exports("GetPlayerHouses", countHouses)
+--[[
+    Exports
+]]
+
+Exports("getPlayerData", getPlayerData)
+Exports("onlinePlayers", onlinePlayers)
+Exports("countHouses", countHouses)
+Exports("countGenders", countGenders)
+
+--[[
+    Events
+]]
+
+RegisterForEvent("player_joined", function(Player)
+    onPlayerJoin(Player)
+end)
+
+RegisterForEvent("player_left", function(Player)
+    onPlayerLeave(Player)
+end)

@@ -1,5 +1,8 @@
 [
     {
+        "name": "chatcommand"
+    },
+    {
         "name": "discord"
     },
     {
@@ -9,6 +12,6 @@
         "name": "player"
     },
     {
-        "name": "npcs"
+        "name": "npc"
     }
 ]

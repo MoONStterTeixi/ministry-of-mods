@@ -1,5 +1,9 @@
 local Peds = {}
 
+--[[
+    Functions
+]]
+
 function CreatePed(gender, gear, features, house, spawnPos)
     local Ped = server.npc_manager:Create()
     Ped.gender = gender
@@ -35,7 +39,7 @@ function CreatePed(gender, gear, features, house, spawnPos)
     return Ped
 end
 
-function RemovePed(Ped)
+local function RemovePed(Ped)
     for i,v in pairs(Peds) do
         if v == Ped then
             server.npc_manager:Remove(Ped)
@@ -45,6 +49,14 @@ function RemovePed(Ped)
     end
 end
 
+--[[
+    Exports
+]]
+
 Exports("CreatePed", CreatePed)
 
 Exports("RemovePed", RemovePed)
+
+Exports("GetSpawnedPeds", function()
+    return Peds
+end)

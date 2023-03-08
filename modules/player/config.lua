@@ -1,3 +1,1 @@
 Config = {}
-
-Config.DiscordLogs = true

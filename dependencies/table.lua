@@ -1,6 +1,6 @@
 local function riter(t, i)
     i = i - 1
-    
+
     if i > 0 then
         return i, t[i]
     end
@@ -62,7 +62,7 @@ end
 
 function table:len()
     local n = 0
-    
+
     for k,v in pairs(self) do
         n = n + 1
     end
