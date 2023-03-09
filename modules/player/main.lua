@@ -92,6 +92,7 @@ end
 
 function onPlayerJoin(Player)
     loadPlayerData(Player)
+    Exports.world.syncWorld()
 end
 
 function onPlayerLeave(Player)

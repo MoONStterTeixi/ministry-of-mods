@@ -202,22 +202,22 @@ loadResource = function(_g, resourceName, options)
 
     local versionPath = options.version and ("/" .. options.version) or ""
     local resourcePath = _PATH .. "/modules/" .. resourceName .. versionPath
-    local entryFilePath = resourcePath .. "/resource.json"
+    local entryFilePath = resourcePath .. "/manifest.json"
 
     if not fileExists(entryFilePath) then
-        return error("resource does not contain resource.json entry file: " .. resourceName)
+        return error("resource does not contain manifest.json entry file: " .. resourceName)
     end
 
     local entryFileContent = readFile(entryFilePath)
 
     if type(entryFileContent) ~= "string" then
-        return error("resource has invalid resource.json entry file: " .. resourceName)
+        return error("resource has invalid manifest.json entry file: " .. resourceName)
     end
 
     local resourceDef = json.decode(entryFileContent)
 
     if type(resourceDef) ~= "table" then
-        return error("resource has invalid resource.json entry file content: " .. resourceName)
+        return error("resource has invalid manifest.json entry file content: " .. resourceName)
     end
 
     local env = options.env or createEnvironment(resourceName, options.version or "default")

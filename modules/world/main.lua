@@ -66,6 +66,15 @@ function Initiate()
     if type(weather.weather) == "string" and Config.WeatherTypes[weather.weather] then
         WorldData.weather = weather.weather
     end
+    if Config.Time.UseOSTime then
+        local date = os.date("*t")
+        WorldData.hour = tonumber(date.hour)
+        WorldData.minute = tonumber(date.min)
+        WorldData.second = tonumber(date.sec)
+        WorldData.year = tonumber(date.year)
+        WorldData.month = tonumber(date.month)
+        WorldData.day = tonumber(date.day)
+    end
 end
 
 function Update(Delta)

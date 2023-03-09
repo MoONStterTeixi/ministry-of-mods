@@ -7,8 +7,8 @@ Config.Settings = {
 }
 
 Config.Time = { -- False values ignore the variable/setting (meaning it doesn't set anything)
-    FreezeTime = false, -- Forces the Time & Date to freeze
-    UseOSTime = false, -- if you want to use OS time (ignores all time settings below)
+    FreezeTime = true, -- Forces the Time & Date to freeze
+    UseOSTime = true, -- if you want to use OS time (ignores all time settings below)
     hour = false, -- Must be between 1 & 23
     minute = false, -- Must be between 1 & 59
     second = false, -- Must be between 1 & 59
