@@ -1,7 +1,7 @@
 Config = {}
 
 Config.Settings = {
-    SyncTimer = 30, -- How long before before the server forces a sync (Seconds)
+    SyncTimer = 0, -- How long before before the server forces a sync (Seconds)
     RandomWeatherTimer = 300, -- How long before the server changes the weather (Secon1ds)
     MinutesPerSync = 0, -- Every sync adds the given number to minutes
 }

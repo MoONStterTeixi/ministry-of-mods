@@ -2,6 +2,11 @@
 
 This module regulates the world
 
+**Warning:** freezeing time and weather isn't actually stopping the game engines weather/time.
+What this does is freezes the math I am doing on the server side and does not add further to the server side table of world information.
+When the game sync's it pulls the table of information and sets that information to the world.
+Having a sync time of 0 is untested with others, but as a solo player there is no issue.
+
 ## For Developers
 
 ### Exports
