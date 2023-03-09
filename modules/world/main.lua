@@ -25,8 +25,37 @@ function syncWorld()
 end
 
 function newWeather()
-    local getSeason = Config.SeasonTypes[Config.SeasonTable[WorldData.month]]
-    WorldData.weather = Config.WeatherTypes[math.random(1,#Config.WeatherSystems[getSeason])]
+    local seasonIndex = Config.SeasonTable[WorldData.month]
+    local season = Config.SeasonTypes[seasonIndex]
+    local weatherTypes = Config.Seasons[season]
+    local totalChance = 0
+    for _, chance in pairs(weatherTypes) do
+        if not (chance <= 0) then
+            totalChance = totalChance + chance
+        end
+    end
+    local randomChance = math.random(1, totalChance)
+    local currentChance = 0
+    local currentWeatherType = nil
+    for weatherType, chance in pairs(weatherTypes) do
+        if not (chance <= 0) then
+            currentChance = currentChance + chance
+            if randomChance <= currentChance then
+                currentWeatherType = weatherType
+                break
+            end
+        end
+    end
+    local weatherEffect = nil
+    if Config.WeatherTypes[currentWeatherType] then
+        local weatherTypeTable = Config.WeatherTypes[currentWeatherType]
+        local numWeatherEffects = #weatherTypeTable
+        local randomIndex = math.random(1, numWeatherEffects)
+        weatherEffect = weatherTypeTable[randomIndex]
+    end
+    WorldData.season = seasonIndex
+    WorldData.weather = weatherEffect
+    print(WorldData.season, WorldData.weather)
     syncWorld()
 end
 
@@ -75,6 +104,9 @@ function Initiate()
         WorldData.month = tonumber(date.month)
         WorldData.day = tonumber(date.day)
     end
+    if not Config.Weather.FreezeWeather then
+        newWeather()
+    end
 end
 
 function Update(Delta)
@@ -119,7 +151,6 @@ function Update(Delta)
         end
     end
     if not FreezeWeather then
-        WorldData.season = Config.SeasonTable[WorldData.month]
         if WeatherTick > Config.Settings.RandomWeatherTimer then
             WeatherTick = WeatherTick - Config.Settings.RandomWeatherTimer
             newWeather()

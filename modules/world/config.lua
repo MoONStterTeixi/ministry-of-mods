@@ -7,8 +7,8 @@ Config.Settings = {
 }
 
 Config.Time = { -- False values ignore the variable/setting (meaning it doesn't set anything)
-    FreezeTime = true, -- Forces the Time & Date to freeze
-    UseOSTime = true, -- if you want to use OS time (ignores all time settings below)
+    FreezeTime = false, -- Forces the Time & Date to freeze
+    UseOSTime = false, -- if you want to use OS time (ignores all time settings below)
     hour = false, -- Must be between 1 & 23
     minute = false, -- Must be between 1 & 59
     second = false, -- Must be between 1 & 59
@@ -36,46 +36,51 @@ Config.SeasonTypes = {
     [4] = "Spring",
 }
 
-Config.WeatherSystems = {
-    Spring = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19,20,21,22,27,28,29,30},
-    Summer = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19,20,21,22,27,28,29,30,34},
-    Fall = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19,20,21,22,27,28,29,30},
-    Winter = {3,16,23,24,25,26,31,32,33},
+Config.Seasons = {
+    Summer = {
+        Clear = 50,
+        Rainy = 10,
+        Overcast = 20,
+        Misty = 5,
+        Snowy = 0,
+        Sanctuary = 0,
+        Other = 0,
+    },
+    Winter = {
+        Clear = 10,
+        Rainy = 5,
+        Overcast = 30,
+        Misty = 20,
+        Snowy = 35,
+        Sanctuary = 0,
+        Other = 0,
+    },
+    Fall = {
+        Clear = 20,
+        Rainy = 40,
+        Overcast = 15,
+        Misty = 10,
+        Snowy = 0,
+        Sanctuary = 0,
+        Other = 0,
+    },
+    Spring = {
+        Clear = 30,
+        Rainy = 30,
+        Overcast = 20,
+        Misty = 10,
+        Snowy = 0,
+        Sanctuary = 0,
+        Other = 0,
+    }
 }
 
 Config.WeatherTypes = {
-    [1] = "Announce",
-    [2] = "Astronomy",
-    [3] = "Clear",
-    [4] = "Default_PHY",
-    [5] = "FIG_07_Storm",
-    [6] = "ForbiddenForest_01",
-    [7] = "HighAltitudeOnly",
-    [8] = "Intro_01",
-    [9] = "LightClouds_01",
-    [10] = "LightRain_01",
-    [11] = "Misty_01",
-    [12] = "MistyOvercast_01",
-    [13] = "MKT_Nov11",
-    [14] = "Overcast_01",
-    [15] = "Overcast_Heavy_01",
-    [16] = "Overcast_Heavy_Winter_01",
-    [17] = "Overcast_Windy_01",
-    [18] = "Rainy",
-    [19] = "Sanctuary_Bog",
-    [20] = "Sanctuary_Coastal",
-    [21] = "Sanctuary_Forest",
-    [22] = "Sanctuary_Grasslands",
-    [23] = "Snow_01",
-    [24] = "Snow_Const",
-    [25] = "SnowLight_01",
-    [26] = "SnowShort",
-    [27] = "Stormy_01",
-    [28] = "StormyLarge_01",
-    [29] = "TestStormShort",
-    [30] = "TestWind",
-    [31] = "Winter_Misty_01",
-    [32] = "Winter_Overcast_01",
-    [33] = "Winter_Overcast_Windy_01",
-    [34] = "Summer_Overcast_Heavy_01",
+    Clear = {"Clear", "LightClouds_01"},
+    Rainy = {"LightRain_01", "Rainy", "FIG_07_Storm", "Stormy_01", "StormyLarge_01", "TestStormShort"},
+    Overcast = {"Overcast_01", "Overcast_Heavy_01", "Overcast_Heavy_Winter_01", "Overcast_Windy_01", "Winter_Overcast_01", "Winter_Overcast_Windy_01", "Summer_Overcast_Heavy_01"},
+    Misty = {"Misty_01", "MistyOvercast_01", "Winter_Misty_01"},
+    Snowy = {"Snow_01", "Snow_Const", "SnowLight_01", "SnowShort"},
+    Sanctuary = {"Sanctuary_Bog", "Sanctuary_Coastal", "Sanctuary_Forest", "Sanctuary_Grasslands"},
+    Other = {"Announce", "Astronomy", "Default_PHY", "ForbiddenForest_01", "HighAltitudeOnly", "Intro_01", "MKT_Nov11", "TestWind"}
 }
