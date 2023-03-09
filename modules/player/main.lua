@@ -25,15 +25,34 @@ local playerData = {}
 function loadPlayerData(Player)
     local data = LoadData(_RESOURCE, DATA_FILE)
     if data then
-        local playerID = tostring(Player.connection)
-        if data[playerID] then
-            playerData[playerID] = data[playerID]
-            playerData[playerID].lastPlayed = os.time()
-        else
-            playerData[playerID] = {
+        local pIdentifiers = {discord = Player.discord_id, steam = Player.steam_id, epic = Player.epic_id}
+        for i,v in ipairs(data) do
+            local dIdentifiers = v.identifiers
+            local matchFound = false
+            for a,b in pairs(pIdentifiers) do
+                if dIdentifiers[a] and dIdentifiers[a] == b then
+                    playerData[Player.connection] = data[i]
+                    playerData[Player.connection].lastPlayed = os.time()
+                    matchFound = true
+                    break
+                end
+            end
+            if matchFound then
+                for a,b in pairs(pIdentifiers) do
+                    if not playerData[Player.connection].identifiers[a] then
+                        playerData[Player.connection].identifiers[a] = b
+                        savePlayerData(Player)
+                    end
+                end
+                break
+            end
+        end
+        if not playerData[Player.connection] then
+            playerData[Player.connection] = {
                 house = Player.house,
                 gender = Player.gender,
-                lastPlayed = os.time()
+                lastPlayed = os.time(),
+                identifiers = pIdentifiers
             }
             savePlayerData(Player)
         end
@@ -41,13 +60,31 @@ function loadPlayerData(Player)
 end
 
 function savePlayerData(Player)
-    local playerID = tostring(Player.connection)
-    if playerData[playerID] then
+    if playerData[Player.connection] then
         local data = LoadData(_RESOURCE, DATA_FILE)
         if data then
-            data[playerID] = playerData[playerID]
+            local pIdentifiers = playerData[Player.connection].identifiers
+            local found = false
+            for i, v in ipairs(data) do
+                local dIdentifiers = v.identifiers
+                local matchFound = false
+                for a,b in pairs(pIdentifiers) do
+                    if dIdentifiers[a] and dIdentifiers[a] == b then
+                        matchFound = true
+                        break
+                    end
+                end
+                if matchFound then
+                    data[i] = playerData[Player.connection]
+                    found = true
+                    break
+                end
+            end
+            if not found then
+                table.insert(data, playerData[Player.connection])
+            end
             SaveData(_RESOURCE, DATA_FILE, data)
-            return success
+            return true
         end
     end
     return false

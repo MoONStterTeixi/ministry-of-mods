@@ -17,7 +17,7 @@ local FreezeTime, FreezeWeather = Config.Time.FreezeTime, Config.Weather.FreezeW
 ]]
 
 function syncWorld()
-    print("World Syncing")
+    --print("World Syncing")
     for i,v in pairs(WorldData) do
         world[i] = v
     end
@@ -85,7 +85,6 @@ function Update(Delta)
         else
             if SecondTick > 1 then
                 SecondTick = SecondTick - 1
-                WorldData.minute = WorldData.minute + Config.Settings.MinutesPerSecond
                 WorldData.second = WorldData.second + 1
             end
             if WorldData.second > 59 then
@@ -119,6 +118,7 @@ function Update(Delta)
     end
     if SyncTick > Config.Settings.SyncTimer then
         SyncTick = SyncTick - Config.Settings.SyncTimer
+        WorldData.minute = WorldData.minute + Config.Settings.MinutesPerSync
         syncWorld()
     end
 end
