@@ -17,7 +17,6 @@ local FreezeTime, FreezeWeather = Config.Time.FreezeTime, Config.Weather.FreezeW
 ]]
 
 function syncWorld()
-    --print("World Syncing")
     for i,v in pairs(WorldData) do
         world[i] = v
     end
@@ -55,7 +54,6 @@ function newWeather()
     end
     WorldData.season = seasonIndex
     WorldData.weather = weatherEffect
-    print(WorldData.season, WorldData.weather)
     syncWorld()
 end
 

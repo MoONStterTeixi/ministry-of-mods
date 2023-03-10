@@ -1,13 +1,13 @@
 _G._PATH = io.popen("cd"):read("*l")
 
 --
--- Load Required Libraries
+-- Load Libraries
 --
 
-require("library/json")
-require("library/string")
-require("library/table")
-require("library/math")
+require("library\\json")
+require("library\\string")
+require("library\\table")
+require("library\\math")
 
 --
 -- File Validation
