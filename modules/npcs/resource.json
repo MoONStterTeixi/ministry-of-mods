@@ -1,4 +1,10 @@
 [
-    "config",
-    "main"
+    "Config",
+    "Permissions",
+    "CommandHandler",
+    "CommandAnnunce",
+    "CommandBan",
+    "CommandKick",
+    "CommandCoords",
+    "CommandTp"
 ]
